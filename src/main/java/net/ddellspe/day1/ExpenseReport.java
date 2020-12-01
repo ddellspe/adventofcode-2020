@@ -1,31 +1,36 @@
 package net.ddellspe.day1;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseReport {
-  public static int fixExpenseReportPart1(String fileName) {
-    List<Integer> expenses = new ArrayList<Integer>();
+  /**
+   * Reads in the integers from the file in the resource path with the given file name and returns
+   * the integers in a list.
+   *
+   * @param fileName The name of the file (in the resource path) to read in
+   * @return the list of integers found in the file
+   */
+  public static List<Integer> readInExpenses(String fileName) {
+    List<Integer> values = new ArrayList<Integer>();
     BufferedReader reader =
         new BufferedReader(
             new InputStreamReader(ExpenseReport.class.getResourceAsStream(fileName)));
-    String line;
-    try {
-      line = reader.readLine();
-      while (line != null) {
-        expenses.add(Integer.parseInt(line));
-        line = reader.readLine();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return calculateExpensesPart1(expenses);
+    reader.lines().mapToInt(value -> Integer.parseInt(value)).forEach(value -> values.add(value));
+    return values;
   }
 
-  public static int calculateExpensesPart1(List<Integer> values) {
+  /**
+   * Given two entries in the list of expenses, if the sum of the two items is 2020, return the
+   * product of those two items.
+   *
+   * @param fileName The name of the file (in the resource path) to read in
+   * @return the product of the two numbers that sum to 2020, 0 if not found.
+   */
+  public static int calculateExpensesPart1(String fileName) {
+    List<Integer> values = readInExpenses(fileName);
     for (int i = 0; i < values.size(); i++) {
       for (int j = i + 1; j < values.size(); j++) {
         if (values.get(i) + values.get(j) == 2020) {
@@ -36,25 +41,15 @@ public class ExpenseReport {
     return 0;
   }
 
-  public static int fixExpenseReportPart2(String fileName) {
-    List<Integer> expenses = new ArrayList<Integer>();
-    BufferedReader reader =
-        new BufferedReader(
-            new InputStreamReader(ExpenseReport.class.getResourceAsStream(fileName)));
-    String line;
-    try {
-      line = reader.readLine();
-      while (line != null) {
-        expenses.add(Integer.parseInt(line));
-        line = reader.readLine();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return calculateExpensesPart2(expenses);
-  }
-
-  public static int calculateExpensesPart2(List<Integer> values) {
+  /**
+   * Given three entries in the list of expenses, if the sum of the three items is 2020, return the
+   * product of those three items.
+   *
+   * @param fileName The name of the file (in the resource path) to read in
+   * @return the product of the three numbers that sum to 2020, 0 if not found.
+   */
+  public static int calculateExpensesPart2(String fileName) {
+    List<Integer> values = readInExpenses(fileName);
     for (int i = 0; i < values.size(); i++) {
       for (int j = i + 1; j < values.size(); j++) {
         for (int k = j + 1; k < values.size(); k++) {
