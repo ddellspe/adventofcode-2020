@@ -3,8 +3,8 @@ package net.ddellspe.day1;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExpenseReport {
   /**
@@ -15,15 +15,14 @@ public class ExpenseReport {
    * @return the list of integers found in the file
    */
   public static List<Integer> readInExpenses(String fileName) {
-    List<Integer> values = new ArrayList<Integer>();
     try (BufferedReader reader =
         new BufferedReader(
             new InputStreamReader(ExpenseReport.class.getResourceAsStream(fileName)))) {
-      reader.lines().mapToInt(value -> Integer.parseInt(value)).forEach(value -> values.add(value));
+      return reader.lines().map(m -> Integer.parseInt(m)).collect(Collectors.toList());
     } catch (IOException e) {
       e.printStackTrace();
+      return null;
     }
-    return values;
   }
 
   /**
