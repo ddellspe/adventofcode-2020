@@ -1,6 +1,7 @@
 package net.ddellspe.day1;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,13 @@ public class ExpenseReport {
    */
   public static List<Integer> readInExpenses(String fileName) {
     List<Integer> values = new ArrayList<Integer>();
-    BufferedReader reader =
+    try (BufferedReader reader =
         new BufferedReader(
-            new InputStreamReader(ExpenseReport.class.getResourceAsStream(fileName)));
-    reader.lines().mapToInt(value -> Integer.parseInt(value)).forEach(value -> values.add(value));
+            new InputStreamReader(ExpenseReport.class.getResourceAsStream(fileName)))) {
+      reader.lines().mapToInt(value -> Integer.parseInt(value)).forEach(value -> values.add(value));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return values;
   }
 
