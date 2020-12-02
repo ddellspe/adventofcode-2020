@@ -11,6 +11,7 @@ I will be blogging each day (after some time) at [my blog](https://ddellspe.net)
 
 Completion Statistics:
 
-|Day|Part 2|Part 1|Top 100|
-|-|-|-|-|
-|1|22777|25201 (+2424)|no|
+|Day|Top 100|Part 1 Time|Part 1 Rank|Part 2 Time|Part 2 Rank|
+|-|-|-|-|-|-|
+|1|no|06:20:18|24348|06:23:31|22102|
+|2|no|06:33:02|31595|06:37:53|29537|
