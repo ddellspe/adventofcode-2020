@@ -52,19 +52,10 @@ public class PasswordEntry {
    * @return true if the password is valid, false if the password is invalid
    */
   public boolean isValidPasswordPart2() {
-    if (password.charAt(num1 - 1) == character) {
-      if (password.charAt(num2 - 1) == character) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      if (password.charAt(num2 - 1) == character) {
-        return true;
-      } else {
-        return false;
-      }
+    if (password.charAt(num1 - 1) == character ^ password.charAt(num2 - 1) == character) {
+      return true;
     }
+    return false;
   }
 
   @Override
