@@ -46,8 +46,9 @@ public class PasswordEntry {
 
   /**
    * Checks whether based on the PasswordEntry attributes, that the password is valid. In Part 2, a
-   * valid password has the character at EITHER position num1 or num2, but not both. If a password
-   * doesn't have the character and either position num1 or num2, it will also be invalid.
+   * valid password has the character at EITHER position (num1-1) or (num2-1), but not both. If a
+   * password doesn't have the character and either position (num1-1) or (num2-1), it will also be
+   * invalid.
    *
    * @return true if the password is valid, false if the password is invalid
    */
