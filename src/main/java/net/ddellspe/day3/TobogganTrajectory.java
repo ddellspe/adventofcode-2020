@@ -42,7 +42,11 @@ public class TobogganTrajectory {
     List<String> map = readInMap(fileName);
     return IntStream.range(0, map.size())
         .filter(downPos -> downPos % downMove == 0)
-        .filter(downPos -> map.get(downPos).charAt((downPos * rightMove / downMove) % map.get(downPos).length()) == '#')
+        .filter(
+            downPos ->
+                map.get(downPos)
+                        .charAt((downPos * rightMove / downMove) % map.get(downPos).length())
+                    == '#')
         .count();
   }
 
@@ -56,8 +60,7 @@ public class TobogganTrajectory {
    * @return the product of all paths to be tested
    */
   public static long getProductTreesInPath(String fileName, List<int[]> moves) {
-    return moves
-        .stream()
+    return moves.stream()
         .map(move -> getTreesInPath(fileName, move[0], move[1]))
         .reduce(1L, (a, b) -> a * b);
   }
