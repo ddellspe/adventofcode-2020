@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PassportProcessing {
@@ -22,17 +23,18 @@ public class PassportProcessing {
         new BufferedReader(
             new InputStreamReader(PassportProcessing.class.getResourceAsStream(fileName)))) {
       List<Passport> passports = new ArrayList<Passport>();
-      Passport passport = new Passport();
-      String line = reader.readLine();
-      while (line != null) {
-        if (line.equals("")) {
-          passports.add(passport);
-          passport = new Passport();
-        } else {
-          passport.addEntries(line);
-        }
-        line = reader.readLine();
-      }
+      passports =
+          Arrays.stream(
+                  reader
+                      .lines()
+                      .collect(
+                          Collectors.reducing(
+                              "",
+                              line -> line.equals("") ? "BREAK" : line,
+                              (string, line) -> string + (string.equals("") ? "" : " ") + line))
+                      .split(" BREAK "))
+              .map(entries -> new Passport(entries))
+              .collect(Collectors.toList());
       return passports;
     } catch (IOException e) {
       e.printStackTrace();
@@ -76,8 +78,13 @@ public class PassportProcessing {
       passportEntries = new ArrayList<PassportEntry>();
     }
 
+    public Passport(String entries) {
+      passportEntries = new ArrayList<PassportEntry>();
+      addEntries(entries);
+    }
+
     public void addEntries(String entriesLine) {
-      for (String entry : entriesLine.split(" ")) {
+      for (String entry : entriesLine.split("\\s+")) {
         passportEntries.add(new PassportEntry(entry));
       }
     }
@@ -116,9 +123,10 @@ public class PassportProcessing {
      */
     boolean hasValidKey(String key) {
       Stream<String> entries =
-          passportEntries.stream()
+          passportEntries
+              .stream()
               .filter(entry -> entry.getKey().equals(key))
-              .map(entry -> entry.getValue());
+              .map(PassportEntry::getValue);
       long count = 0;
       switch (key) {
         case "byr":
