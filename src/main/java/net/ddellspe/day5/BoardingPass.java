@@ -35,8 +35,7 @@ public class BoardingPass {
    * @return the seat id for the given boarding pass
    */
   public static long getBoardingPassSeatId(String boardingPass) {
-    return Integer.parseInt(boardingPass.substring(0, 7).replace('F', '0').replace('B', '1'), 2) * 8
-        + Integer.parseInt(boardingPass.substring(7, 10).replace('R', '1').replace('L', '0'), 2);
+    return Integer.parseInt(boardingPass.replaceAll("[BR]", "1").replaceAll("[FL]", "0"), 2);
   }
 
   /**
@@ -64,24 +63,20 @@ public class BoardingPass {
    */
   public static long findMyBoardingPass(String fileName) {
     List<String> passes = readInBoardingPasses(fileName);
-    List<Long> seatIds =
-        passes
+    return passes
             .stream()
             .map(boardingPass -> getBoardingPassSeatId(boardingPass))
             .sorted()
-            .collect(Collectors.toList());
-    long mySeatId = -1;
-    for (Long seatId : seatIds) {
-      if (mySeatId == -1) {
-        mySeatId = seatId;
-        continue;
-      }
-      if (seatId > mySeatId + 1) {
-        mySeatId++;
-        break;
-      }
-      mySeatId = seatId;
-    }
-    return mySeatId;
+            .collect(
+                Collectors.reducing(
+                    -1,
+                    (mySeatId, seatId) ->
+                        (mySeatId.longValue() == -1L
+                                || seatId.longValue() <= mySeatId.longValue() + 1)
+                            ? seatId
+                            : mySeatId))
+            .longValue()
+        // adding one because this is the seat id before my seat id
+        + 1L;
   }
 }
