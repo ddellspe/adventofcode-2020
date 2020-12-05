@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class BoardingPass {
 
@@ -63,20 +64,16 @@ public class BoardingPass {
    */
   public static long findMyBoardingPass(String fileName) {
     List<String> passes = readInBoardingPasses(fileName);
-    return passes
+    List<Long> seatIds =
+        passes
             .stream()
             .map(boardingPass -> getBoardingPassSeatId(boardingPass))
-            .sorted()
-            .collect(
-                Collectors.reducing(
-                    -1,
-                    (mySeatId, seatId) ->
-                        (mySeatId.longValue() == -1L
-                                || seatId.longValue() <= mySeatId.longValue() + 1)
-                            ? seatId
-                            : mySeatId))
-            .longValue()
-        // adding one because this is the seat id before my seat id
-        + 1L;
+            .collect(Collectors.toList());
+    return LongStream.range(
+            seatIds.stream().min(Long::compare).get(),
+            seatIds.stream().max(Long::compare).get() + 1L)
+        .parallel()
+        .map(value -> seatIds.contains(value) ? 0 : value)
+        .sum();
   }
 }
