@@ -123,8 +123,7 @@ public class PassportProcessing {
      */
     boolean hasValidKey(String key) {
       Stream<String> entries =
-          passportEntries
-              .stream()
+          passportEntries.stream()
               .filter(entry -> entry.getKey().equals(key))
               .map(PassportEntry::getValue);
       long count = 0;

@@ -74,8 +74,7 @@ public class CustomCustoms {
    */
   public static long part1(String fileName) {
     List<String> customsForms = readInCustomsForms(fileName);
-    return customsForms
-        .stream()
+    return customsForms.stream()
         .mapToLong(groupData -> groupData.replace("-", "").chars().distinct().count())
         .sum();
   }

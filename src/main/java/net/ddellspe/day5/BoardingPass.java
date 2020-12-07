@@ -47,8 +47,7 @@ public class BoardingPass {
    */
   public static long maxBoardingPassSeatId(String fileName) {
     List<String> passes = readInBoardingPasses(fileName);
-    return passes
-        .stream()
+    return passes.stream()
         .map(boardingPass -> getBoardingPassSeatId(boardingPass))
         .max(Long::compare)
         .get();
@@ -65,8 +64,7 @@ public class BoardingPass {
   public static long findMyBoardingPass(String fileName) {
     List<String> passes = readInBoardingPasses(fileName);
     List<Long> seatIds =
-        passes
-            .stream()
+        passes.stream()
             .map(boardingPass -> getBoardingPassSeatId(boardingPass))
             .collect(Collectors.toList());
     return LongStream.range(
