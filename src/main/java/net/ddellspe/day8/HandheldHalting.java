@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class HandheldHalting {
 
@@ -76,44 +77,18 @@ public class HandheldHalting {
    */
   public static int part2(String fileName) {
     List<Instruction> instructions = readFile(fileName);
-    int accumulator = 0;
-    int index = 0;
-    Set<Integer> visitedInstructions = new HashSet<Integer>();
-    Set<Integer> jmpInstructions = new HashSet<Integer>();
-    Set<Integer> nopInstructions = new HashSet<Integer>();
-    while (!visitedInstructions.contains(index) || index > visitedInstructions.size()) {
-      Instruction curInst = instructions.get(index);
-      visitedInstructions.add(index);
-      switch (curInst.getCommand()) {
-        case "acc":
-          accumulator += curInst.getValue();
-          index++;
-          break;
-        case "jmp":
-          jmpInstructions.add(index);
-          index += curInst.getValue();
-          break;
-        case "nop":
-          nopInstructions.add(index);
-          index++;
-      }
-    }
-    for (int jmpToNopChange : jmpInstructions) {
-      accumulator = runBootSequence(instructions, jmpToNopChange, -1);
-      if (accumulator > -1) {
-        break;
-      }
-    }
-    if (accumulator > -1) {
-      return accumulator;
-    }
-    for (int nopToJmpChange : nopInstructions) {
-      accumulator = runBootSequence(instructions, -1, nopToJmpChange);
-      if (accumulator > -1) {
-        break;
-      }
-    }
-    return accumulator;
+    Set<Integer> jmpNopInstructions =
+        IntStream.range(0, instructions.size())
+            .filter(
+                index ->
+                    instructions.get(index).getCommand().equals("jmp")
+                        || instructions.get(index).getCommand().equals("nop"))
+            .boxed()
+            .collect(Collectors.toSet());
+    return jmpNopInstructions.stream()
+        .mapToInt(value -> runBootSequence(instructions, value))
+        .filter(value -> value > -1)
+        .sum();
   }
 
   /**
@@ -126,7 +101,7 @@ public class HandheldHalting {
    * @param nopToJmp the index to change from nop to jmp for the boot attempt
    * @return the accumulator value if the boot sequence completes successfully, otherwise -1
    */
-  public static int runBootSequence(List<Instruction> instructions, int jmpToNop, int nopToJmp) {
+  public static int runBootSequence(List<Instruction> instructions, int changeIndex) {
     int accumulator = 0;
     int index = 0;
     Set<Integer> visitedInstructions = new HashSet<Integer>();
@@ -134,11 +109,8 @@ public class HandheldHalting {
       Instruction curInst = instructions.get(index);
       visitedInstructions.add(index);
       String command = curInst.getCommand();
-      if (index == jmpToNop) {
-        command = "nop";
-      }
-      if (index == nopToJmp) {
-        command = "jmp";
+      if (index == changeIndex) {
+        command = command.equals("jmp") ? "nop" : "jmp";
       }
       switch (command) {
         case "acc":
