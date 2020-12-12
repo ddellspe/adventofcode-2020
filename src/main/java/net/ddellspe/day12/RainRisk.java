@@ -54,14 +54,9 @@ public class RainRisk {
           x -= movement.distance;
           break;
         case "L":
-          rot -= (movement.distance / 90);
-          rot += 4;
-          rot %= 4;
-          break;
+          movement.distance = 360 - movement.distance;
         case "R":
-          rot += (movement.distance / 90);
-          rot += 4;
-          rot %= 4;
+          rot = (int) ((rot + (movement.distance / 90) + 4) % 4);
           break;
         case "F":
           switch (rot) {
@@ -93,14 +88,12 @@ public class RainRisk {
    */
   public static long part2(String fileName) {
     List<String> movementDirections = readFile(fileName);
-    long shipX = 0;
-    long shipY = 0;
     long wpX = 10;
     long wpY = 1;
+    long x = 0;
+    long y = 0;
     for (Movement movement :
         movementDirections.stream().map(Movement::new).collect(Collectors.toList())) {
-      long xDiff = wpX - shipX;
-      long yDiff = wpY - shipY;
       switch (movement.move) {
         case "N":
           wpY += movement.distance;
@@ -115,45 +108,32 @@ public class RainRisk {
           wpX -= movement.distance;
           break;
         case "L":
-          switch ((int) movement.distance) {
-            case 90:
-              wpX = shipX - yDiff;
-              wpY = shipY + xDiff;
-              break;
-            case 180:
-              wpX = shipX - xDiff;
-              wpY = shipY - yDiff;
-              break;
-            case 270:
-              wpX = shipX + yDiff;
-              wpY = shipY - xDiff;
-              break;
-          }
-          break;
+          movement.distance = 360 - movement.distance;
         case "R":
+          long tempX = wpX;
+          long tempY = wpY;
           switch ((int) movement.distance) {
             case 90:
-              wpX = shipX + yDiff;
-              wpY = shipY - xDiff;
+              wpX = tempY;
+              wpY = -tempX;
               break;
             case 180:
-              wpX = shipX - xDiff;
-              wpY = shipY - yDiff;
+              wpX = -tempX;
+              wpY = -tempY;
               break;
             case 270:
-              wpX = shipX - yDiff;
-              wpY = shipY + xDiff;
+              wpX = -tempY;
+              wpY = tempX;
               break;
           }
           break;
         case "F":
-          shipX += xDiff * movement.distance;
-          shipY += yDiff * movement.distance;
-          wpX += xDiff * movement.distance;
-          wpY += yDiff * movement.distance;
+          x += wpX * movement.distance;
+          y += wpY * movement.distance;
+          break;
       }
     }
-    return Math.abs(shipX) + Math.abs(shipY);
+    return Math.abs(x) + Math.abs(y);
   }
 
   public static class Movement {
