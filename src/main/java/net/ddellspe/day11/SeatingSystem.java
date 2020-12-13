@@ -135,8 +135,7 @@ public class SeatingSystem {
       }
       seatingChart = newChart.stream().collect(Collectors.toList());
     } while (change);
-    return seatingChart
-        .stream()
+    return seatingChart.stream()
         .mapToLong(str -> str.chars().filter(chr -> chr == (int) '#').count())
         .sum();
   }
@@ -179,8 +178,7 @@ public class SeatingSystem {
       }
       seatingChart = newChart.stream().collect(Collectors.toList());
     } while (change);
-    return seatingChart
-        .stream()
+    return seatingChart.stream()
         .mapToLong(str -> str.chars().filter(chr -> chr == (int) '#').count())
         .sum();
   }

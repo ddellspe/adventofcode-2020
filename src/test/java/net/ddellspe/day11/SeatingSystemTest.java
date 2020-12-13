@@ -2,15 +2,11 @@ package net.ddellspe.day11;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import org.junit.Test;
 
 public class SeatingSystemTest {
-  @Test
-  public void testIOException() {
-    assertThat(SeatingSystem.readFile("blah.txt"), is(nullValue()));
-  }
 
   @Test
   public void testSampleInputPart1() {
