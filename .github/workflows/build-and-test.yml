@@ -2,7 +2,7 @@ name: build-and-test
 on: [push]
 jobs:
   check-code-build:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
