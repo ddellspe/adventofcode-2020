@@ -1,7 +1,13 @@
 name: build-and-test
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
-  check-code-build:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -9,9 +15,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: "11"
+ 
+  check-code-format:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
       - name: Check Pom Sort
         run: mvn -B sortpom:verify
       - name: Check File Formatting
         run: mvn -B fmt:check
+  check-code-build:
+    needs: check-code-format
+    runs-on: ubuntu-latest
+    steps:
       - name: Test Code
         run: mvn -B verify
