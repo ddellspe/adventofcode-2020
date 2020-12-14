@@ -70,7 +70,7 @@ public class Day13 {
             .collect(Collectors.toList());
 
     Bus bus = buses.get(0);
-    long time = bus.id - bus.offset;
+    long time = 0;
     long interval = 1;
     while (true) {
       if (bus.fitsSchedule(time)) {
