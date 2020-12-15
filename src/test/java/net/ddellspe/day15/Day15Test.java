@@ -4,8 +4,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore(
+    "Day 15 complete, these tests take too long because there's no other optimized way I've found to complete this work")
 public class Day15Test {
   @Test
   public void testSampleInputPart1() {
