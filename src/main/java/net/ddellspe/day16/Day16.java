@@ -55,8 +55,7 @@ public class Day16 {
     List<Rule> rules = ruleStrs.stream().map(rule -> new Rule(rule)).collect(Collectors.toList());
     List<Ticket> tickets =
         nearbyTicketStrs.stream().map(ticket -> new Ticket(ticket)).collect(Collectors.toList());
-    return tickets
-        .stream()
+    return tickets.stream()
         .flatMapToInt(ticket -> ticket.fields.stream().mapToInt(Integer::valueOf))
         .filter(val -> rules.stream().filter(rule -> rule.satisfiesARange(val)).count() == 0)
         .mapToLong(val -> (long) val)
@@ -86,14 +85,11 @@ public class Day16 {
     List<Rule> rules = ruleStrs.stream().map(rule -> new Rule(rule)).collect(Collectors.toList());
     // get the tickets that are valid for further processing
     List<Ticket> validTickets =
-        nearbyTicketStrs
-            .stream()
+        nearbyTicketStrs.stream()
             .map(ticket -> new Ticket(ticket))
             .filter(
                 ticket ->
-                    ticket
-                            .fields
-                            .stream()
+                    ticket.fields.stream()
                             .filter(
                                 field ->
                                     rules.stream().anyMatch(rule -> rule.satisfiesARange(field)))
@@ -109,8 +105,7 @@ public class Day16 {
           IntStream.range(0, rules.size())
               .filter(
                   index ->
-                      validTickets
-                          .stream()
+                      validTickets.stream()
                           .allMatch(ticket -> rule.satisfiesARange(ticket.fields.get(index))))
               .boxed()
               .collect(Collectors.toList()));
@@ -120,18 +115,14 @@ public class Day16 {
     Set<Integer> processedValues = new HashSet<Integer>();
     while (!ruleCandidates.entrySet().stream().allMatch(entry -> entry.getValue().size() == 1)) {
       int index =
-          ruleCandidates
-              .entrySet()
-              .stream()
+          ruleCandidates.entrySet().stream()
               .filter(entry -> entry.getValue().size() == 1)
               .mapToInt(entry -> entry.getValue().get(0))
               .filter(ind -> !processedValues.contains(ind))
               .boxed()
               .findFirst()
               .get();
-      ruleCandidates
-          .entrySet()
-          .stream()
+      ruleCandidates.entrySet().stream()
           .filter(entry -> entry.getValue().size() > 1)
           .filter(entry -> entry.getValue().contains(index))
           .forEach(entry -> entry.getValue().remove(Integer.valueOf(index)));
@@ -140,9 +131,7 @@ public class Day16 {
 
     // Process my ticket for the final value
     Ticket myTicket = new Ticket(myTicketStrs.get(0));
-    return ruleCandidates
-        .entrySet()
-        .stream()
+    return ruleCandidates.entrySet().stream()
         .filter(entry -> entry.getKey().name.startsWith("departure"))
         .mapToInt(entry -> entry.getValue().get(0))
         .mapToLong(index -> (long) myTicket.fields.get(index))
