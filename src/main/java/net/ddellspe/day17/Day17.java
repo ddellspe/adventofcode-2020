@@ -43,7 +43,7 @@ public class Day17 {
     for (int z = 0; z < prevDept; z++) {
       for (int r = 0; r < prevRows; r++) {
         for (int c = 0; c < prevCols; c++) {
-          prevPuzzle[z * prevDept * prevRows + r * prevRows + c] = data.get(r).charAt(c);
+          prevPuzzle[z * prevDept * prevRows + r * prevCols + c] = data.get(r).charAt(c);
         }
       }
     }
@@ -64,8 +64,8 @@ public class Day17 {
         if (r - 1 < 0 || r > prevRows) continue;
         for (int c = 0; c < cols; c++) {
           if (c - 1 < 0 || c > prevCols) continue;
-          puzzle[z * cols * rows + r * rows + c] =
-              prevPuzzle[((z - 1) * prevRows * prevCols) + ((r - 1) * prevRows) + c - 1];
+          puzzle[z * cols * rows + r * cols + c] =
+              prevPuzzle[((z - 1) * prevRows * prevCols) + ((r - 1) * prevCols) + c - 1];
         }
       }
     }
@@ -97,8 +97,8 @@ public class Day17 {
           if (r - 1 < 0 || r > prevRows) continue;
           for (int c = 0; c < cols; c++) {
             if (c - 1 < 0 || c > prevCols) continue;
-            puzzle[z * cols * rows + r * rows + c] =
-                prevPuzzle[((z - 1) * prevRows * prevCols) + ((r - 1) * prevRows) + c - 1];
+            puzzle[z * cols * rows + r * cols + c] =
+                prevPuzzle[((z - 1) * prevRows * prevCols) + ((r - 1) * prevCols) + c - 1];
           }
         }
       }
@@ -137,7 +137,7 @@ public class Day17 {
             prevPuzzle[
                     w * prevDept * prevRows * prevCols
                         + z * prevRows * prevCols
-                        + r * prevRows
+                        + r * prevCols
                         + c] =
                 data.get(r).charAt(c);
           }
@@ -164,11 +164,11 @@ public class Day17 {
           if (r - 1 < 0 || r > prevRows) continue;
           for (int c = 0; c < cols; c++) {
             if (c - 1 < 0 || c > prevCols) continue;
-            puzzle[w * dept * rows * cols + z * cols * rows + r * rows + c] =
+            puzzle[w * dept * rows * cols + z * cols * rows + r * cols + c] =
                 prevPuzzle[
                     ((w - 1) * prevDept * prevRows * prevCols)
                         + ((z - 1) * prevRows * prevCols)
-                        + ((r - 1) * prevRows)
+                        + ((r - 1) * prevCols)
                         + c
                         - 1];
           }
@@ -209,11 +209,11 @@ public class Day17 {
             if (r - 1 < 0 || r > prevRows) continue;
             for (int c = 0; c < cols; c++) {
               if (c - 1 < 0 || c > prevCols) continue;
-              puzzle[w * dept * rows * cols + z * cols * rows + r * rows + c] =
+              puzzle[w * dept * rows * cols + z * cols * rows + r * cols + c] =
                   prevPuzzle[
                       ((w - 1) * prevDept * prevRows * prevCols)
                           + ((z - 1) * prevRows * prevCols)
-                          + ((r - 1) * prevRows)
+                          + ((r - 1) * prevCols)
                           + c
                           - 1];
             }
@@ -268,18 +268,18 @@ public class Day17 {
                         || r2 >= rows
                         || c2 >= cols
                         || (w2 == w && z2 == z && r2 == r && c2 == c)) continue;
-                    if (origPuzzle[w2 * depth * rows * cols + z2 * rows * cols + r2 * rows + c2]
+                    if (origPuzzle[w2 * depth * rows * cols + z2 * rows * cols + r2 * cols + c2]
                         == '#') neighborCount++;
                   }
                 }
               }
             }
-            if (puzzle[w * depth * rows * cols + z * rows * cols + r * rows + c] == '#'
+            if (puzzle[w * depth * rows * cols + z * rows * cols + r * cols + c] == '#'
                 && (neighborCount < 2 || neighborCount > 3)) {
-              puzzle[w * depth * rows * cols + z * rows * cols + r * rows + c] = '.';
-            } else if (puzzle[w * depth * rows * cols + z * rows * cols + r * rows + c] == '.'
+              puzzle[w * depth * rows * cols + z * rows * cols + r * cols + c] = '.';
+            } else if (puzzle[w * depth * rows * cols + z * rows * cols + r * cols + c] == '.'
                 && neighborCount == 3) {
-              puzzle[w * depth * rows * cols + z * rows * cols + r * rows + c] = '#';
+              puzzle[w * depth * rows * cols + z * rows * cols + r * cols + c] = '#';
             }
           }
         }
