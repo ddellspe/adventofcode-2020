@@ -109,7 +109,6 @@ public class Day18 {
   public static List<NumberGroup> getNumberGroups(String row) {
     List<NumberGroup> numberGroups = new ArrayList<NumberGroup>();
     for (int i = 0; i < row.length(); i++) {
-      if (row.charAt(i) == ' ') continue;
       if (row.charAt(i) == '(') {
         int start = i + 1;
         int end = i + 1 + findEndingParentheses(row.substring(i + 1));
@@ -135,12 +134,9 @@ public class Day18 {
     String currentData = group;
     Matcher matcher = expressionPattern.matcher(currentData);
     while (matcher.find()) {
-      if (total == -1L) {
-        operation = 0;
-      }
       if (operation == 0) {
         total += Long.parseLong(matcher.group(1));
-      } else if (operation == 1) {
+      } else {
         total *= Long.parseLong(matcher.group(1));
       }
       operation = matcher.group(2).equals("+") ? 0 : 1;
@@ -149,7 +145,7 @@ public class Day18 {
     }
     if (operation == 0) {
       total += Long.parseLong(currentData);
-    } else if (operation == 1) {
+    } else {
       total *= Long.parseLong(currentData);
     }
     return total;
@@ -201,7 +197,7 @@ public class Day18 {
         parenCount--;
         continue;
       }
-      if (row.charAt(i) == ')' && parenCount == 0) {
+      if (row.charAt(i) == ')') {
         endIndex = i;
         break;
       }
