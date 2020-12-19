@@ -19,7 +19,7 @@ public class Day18Test {
 
   @Test
   public void testPuzzleInputPart1() {
-    System.out.println("Day 17 Part 1 output: " + Day18.part1("input.txt"));
+    System.out.println("Day 18 Part 1 output: " + Day18.part1("input.txt"));
   }
 
   @Test
@@ -37,6 +37,6 @@ public class Day18Test {
 
   @Test
   public void testPuzzleInputPart2() {
-    System.out.println("Day 17 Part 2 output: " + Day18.part2("input.txt"));
+    System.out.println("Day 18 Part 2 output: " + Day18.part2("input.txt"));
   }
 }
