@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Day19 {
@@ -51,14 +54,16 @@ public class Day19 {
       }
     }
     Map<String, Rule> rules = new HashMap<>();
-    ruleData.stream()
+    ruleData
+        .stream()
         .forEach(
             line -> {
               String key = line.split(": ")[0];
               String rulePart = line.split(": ")[1];
               rules.put(key, getRule(rulePart));
             });
-    return testData.stream()
+    return testData
+        .stream()
         .filter(input -> rules.get("0").matches(input, rules).contains(input))
         .count();
   }
@@ -87,7 +92,8 @@ public class Day19 {
       }
     }
     Map<String, Rule> rules = new HashMap<>();
-    ruleData.stream()
+    ruleData
+        .stream()
         .forEach(
             line -> {
               String key = line.split(": ")[0];
@@ -96,7 +102,8 @@ public class Day19 {
             });
     rules.put("8", getRule("42 | 42 8"));
     rules.put("11", getRule("42 31 | 42 11 31"));
-    return testData.stream()
+    return testData
+        .stream()
         .filter(input -> rules.get("0").matches(input, rules).contains(input))
         .count();
   }
@@ -118,7 +125,7 @@ public class Day19 {
       return new OrRule(
           getSubRules(Arrays.stream(ruleRow.split(" \\| ")).collect(Collectors.toList())));
     } else if (ruleRow.contains(" ")) {
-      return new AndRule(
+      return new AddRule(
           getSubRules(Arrays.stream(ruleRow.split(" ")).collect(Collectors.toList())));
     } else if (ruleRow.contains("\"")) {
       return new EndRule(ruleRow.replaceAll("[\" ]", ""));
@@ -140,5 +147,133 @@ public class Day19 {
    */
   public static List<Rule> getSubRules(List<String> ruleTokens) {
     return ruleTokens.stream().map(rule -> getRule(rule)).collect(Collectors.toList());
+  }
+
+  public static interface Rule {
+    Set<String> matches(String input, Map<String, Rule> rules);
+  }
+
+  /**
+   * An and rule requires all sub rules to match in order for this rule to match. Each sub-rule must
+   * match based on the criteria of the sub-rule itself.
+   *
+   * @author david
+   */
+  public static class AddRule implements Rule {
+
+    final List<Rule> subRules;
+
+    public AddRule(List<Rule> subRules) {
+      this.subRules = Collections.unmodifiableList(subRules);
+    }
+
+    @Override
+    public Set<String> matches(String input, Map<String, Rule> rules) {
+      Set<String> matches = subRules.get(0).matches(input, rules);
+      for (int i = 1; i < subRules.size(); i++) {
+        Set<String> nextMatches = new HashSet<>();
+        for (String match : matches) {
+          nextMatches.addAll(
+              subRules
+                  .get(i)
+                  .matches(input.substring(match.length()), rules)
+                  .stream()
+                  .map(nextMatch -> match + nextMatch)
+                  .collect(Collectors.toSet()));
+        }
+        matches = nextMatches;
+      }
+      return matches;
+    }
+  }
+
+  /**
+   * An End rule is a terminus for a chain of referential rules with and rules and or rules and
+   * other referential rules. Matches return a set containing the term as part of the rule if the
+   * input starts with the same characters as the rule term.
+   *
+   * @author david
+   */
+  public static class EndRule implements Rule {
+
+    private final String term;
+
+    public EndRule(String term) {
+      this.term = term;
+    }
+
+    @Override
+    public Set<String> matches(String input, Map<String, Rule> rules) {
+      return input.startsWith(term)
+          ? Collections.singleton(input.substring(0, term.length()))
+          : Collections.emptySet();
+    }
+  }
+
+  /**
+   * This is simply an empty rule in the event that a referential rule doesn't match a rule in the
+   * map.
+   *
+   * @author david
+   */
+  public static class NilRule implements Rule {
+
+    private static final NilRule rule = new NilRule();
+
+    private NilRule() {}
+
+    public static NilRule instance() {
+      return rule;
+    }
+
+    @Override
+    public Set<String> matches(String input, Map<String, Rule> rules) {
+      return Collections.emptySet();
+    }
+  }
+
+  /**
+   * An Or rule requires either sub rule to match in order for this rule to match. Each sub-rule
+   * must match based on the criteria of the sub-rule itself.
+   *
+   * @author david
+   */
+  public static class OrRule implements Rule {
+
+    private final List<Rule> subRules;
+
+    public OrRule(List<Rule> subRules) {
+      this.subRules = Collections.unmodifiableList(subRules);
+    }
+
+    @Override
+    public Set<String> matches(String input, Map<String, Rule> rules) {
+      Set<String> matches = new HashSet<>();
+      for (Rule r : subRules) {
+        matches.addAll(r.matches(input, rules));
+      }
+
+      return matches;
+    }
+  }
+  /**
+   * A Rule that has reference to another rule as its match validation (an example would be 0: 1)
+   * would be that rule 0 is a reference to rule 1, so rule 0 requires rule 1 to match for rule 0 to
+   * match.
+   *
+   * @author david
+   */
+  public static class ReferentialRule implements Rule {
+
+    private final String referencedID;
+
+    public ReferentialRule(String referencedID) {
+      this.referencedID = referencedID;
+    }
+
+    @Override
+    public Set<String> matches(String input, Map<String, Rule> rules) {
+      return rules.getOrDefault(referencedID, NilRule.instance()).matches(input, rules);
+    }
   }
 }
