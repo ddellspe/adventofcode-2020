@@ -54,16 +54,14 @@ public class Day19 {
       }
     }
     Map<String, Rule> rules = new HashMap<>();
-    ruleData
-        .stream()
+    ruleData.stream()
         .forEach(
             line -> {
               String key = line.split(": ")[0];
               String rulePart = line.split(": ")[1];
               rules.put(key, getRule(rulePart));
             });
-    return testData
-        .stream()
+    return testData.stream()
         .filter(input -> rules.get("0").matches(input, rules).contains(input))
         .count();
   }
@@ -92,8 +90,7 @@ public class Day19 {
       }
     }
     Map<String, Rule> rules = new HashMap<>();
-    ruleData
-        .stream()
+    ruleData.stream()
         .forEach(
             line -> {
               String key = line.split(": ")[0];
@@ -102,8 +99,7 @@ public class Day19 {
             });
     rules.put("8", getRule("42 | 42 8"));
     rules.put("11", getRule("42 31 | 42 11 31"));
-    return testData
-        .stream()
+    return testData.stream()
         .filter(input -> rules.get("0").matches(input, rules).contains(input))
         .count();
   }
@@ -174,10 +170,7 @@ public class Day19 {
         Set<String> nextMatches = new HashSet<>();
         for (String match : matches) {
           nextMatches.addAll(
-              subRules
-                  .get(i)
-                  .matches(input.substring(match.length()), rules)
-                  .stream()
+              subRules.get(i).matches(input.substring(match.length()), rules).stream()
                   .map(nextMatch -> match + nextMatch)
                   .collect(Collectors.toSet()));
         }
