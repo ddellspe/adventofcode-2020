@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Day24 {
-  static final int size = 20;
-
   /**
    * Reads in the map from the file and provides it in a streamable list of strings.
    *
@@ -61,22 +59,22 @@ public class Day24 {
         switch (move) {
           case "se":
             x += 1;
-            y -= 2;
+            y -= 1;
             break;
           case "sw":
             x -= 1;
-            y -= 2;
+            y -= 1;
             break;
           case "w":
             x -= 2;
             break;
           case "nw":
             x -= 1;
-            y += 2;
+            y += 1;
             break;
           case "ne":
             x += 1;
-            y += 2;
+            y += 1;
             break;
           case "e":
             x += 2;
@@ -117,22 +115,22 @@ public class Day24 {
         switch (move) {
           case "se":
             x += 1;
-            y -= 2;
+            y -= 1;
             break;
           case "sw":
             x -= 1;
-            y -= 2;
+            y -= 1;
             break;
           case "w":
             x -= 2;
             break;
           case "nw":
             x -= 1;
-            y += 2;
+            y += 1;
             break;
           case "ne":
             x += 1;
-            y += 2;
+            y += 1;
             break;
           case "e":
             x += 2;
@@ -150,10 +148,10 @@ public class Day24 {
         Arrays.asList(
             new Coordinate(2, 0),
             new Coordinate(-2, 0),
-            new Coordinate(1, 2),
-            new Coordinate(-1, 2),
-            new Coordinate(1, -2),
-            new Coordinate(-1, -2));
+            new Coordinate(1, 1),
+            new Coordinate(-1, 1),
+            new Coordinate(1, -1),
+            new Coordinate(-1, -1));
     for (int i = 0; i < 100; i++) {
       Map<Coordinate, Integer> counts = new HashMap<Coordinate, Integer>();
       for (Coordinate tile : blackTiles) {
